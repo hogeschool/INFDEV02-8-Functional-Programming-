@@ -1,0 +1,767 @@
+\documentclass{beamer}
+\usetheme[hideothersubsections]{HRTheme}
+\usepackage{beamerthemeHRTheme}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[space]{grffile}
+\usepackage{soul,xcolor}
+\usepackage{listings}
+\usepackage[simplified]{pgf -umlcd}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\lstset{language=C,
+basicstyle=\ttfamily\footnotesize,
+escapeinside={(*@}{@*)},
+mathescape=true,
+breaklines=true}
+\lstset{
+  literate={ï}{{\"i}}1
+           {ì}{{\`i}}1
+}
+
+\title{Introduction to functional programming and lambda calculus}
+
+\author{The INFDEV@HR Team}
+
+\institute{Hogeschool Rotterdam \\ 
+Rotterdam, Netherlands}
+
+\date{}
+
+\begin{document}
+\maketitle
+\SlideSection{Introduction}
+\SlideSubSection{Lecture topics}
+\begin{frame}[fragile]{\CurrentSection}
+\begin{block}{\CurrentSubSection}
+\begin{itemize}
+\item Course introduction
+\item Exam and practicum
+\item Semantics of traditional programming languages
+\item Basic lambda calculus
+
+\end{itemize}
+
+\end{block}
+
+
+\end{frame}
+
+\SlideSection{Course introduction}
+\SlideSubSection{Course topics}
+\begin{frame}[fragile]{\CurrentSection}
+\begin{block}{\CurrentSubSection}
+\begin{itemize}
+\item We will at discuss a completely new paradigm for expressing programs: functional programming
+\item Functional programming: a paradigm for expressing programs based on lambda calculus
+\item It gives guarantees of correctness in complex places, like parallelism or separation of concerns
+\item It requires a radical conceptual shift in the way you think about programming
+
+\end{itemize}
+
+\end{block}
+
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\begin{block}{\CurrentSubSection}
+\begin{itemize}
+\item We will begin with a short discussion on traditional programming language \textbf{semantics}
+\item We will then show the \textbf{lambda calculus}, which is the foundation for functional languages
+\item \item We will then bridge the gap between theory and practice
+ 
+\item \begin{exampleblock}{}
+\begin{itemize}
+\item We will translate the lambda calculus into two mainstream functional languages: F\# and Haskell
+\item This will cover a huge chunk of possible applications in countless other languages and libraries, from C\# LINQ to Java streams, to Scala, Scheme, Closure, etc.
+
+\end{itemize}
+
+\end{exampleblock}
+
+
+ 
+
+
+\end{itemize}
+
+\end{block}
+
+
+\end{frame}
+
+\SlideSection{Examination}
+\SlideSubSection{Exam structure}
+\begin{frame}[fragile]{\CurrentSection}
+\begin{block}{\CurrentSubSection}
+\begin{itemize}
+\item There is a theoretical exam, where you show understanding of the basic principles
+\item There is a practical exam, where you show understanding of their concrete applications
+
+\end{itemize}
+
+\end{block}
+
+
+\end{frame}
+
+\SlideSubSection{Theoretical exam}
+\begin{frame}[fragile]{\CurrentSection}
+\begin{block}{\CurrentSubSection}
+\begin{itemize}
+\item One question on a lambda calculus program execution
+\item One question on the type system of a lambda calculus program, F\# program, or Haskell program
+\item Both questions must be answered correctly to get a \textbf{voldoende}
+
+\end{itemize}
+
+\end{block}
+
+
+\end{frame}
+
+\SlideSubSection{Practical exam}
+\begin{frame}[fragile]{\CurrentSection}
+\small
+ 
+\begin{exampleblock}{}
+Build, in groups of max four, an interpreter for a virtual machine according to the specifications given in the document that will be published during the course.
+\end{exampleblock}
+
+ 
+\begin{exampleblock}{}
+We will get together at the end of the course, and the teacher(s) will ask you to \textbf{individually} perform some activities on the code to prove understanding and familiarity.
+\end{exampleblock}
+
+ 
+
+\end{frame}
+
+\SlideSection{Semantics of traditional programming languages}
+\SlideSubSection{Semicolon and interference}
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+\begin{itemize}
+\item Traditional, imperative programming languages are based on sharing memory through instructions
+\item This means that subsequent instructions are not independent from each other
+\item Any function call makes use of the available memory
+
+\end{itemize}
+
+\end{exampleblock}
+
+ 
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+For example, consider the semantic rules that describe the working of ``;''
+\end{exampleblock}
+
+ 
+\begin{exampleblock}{}
+First we run $s_1$ with the initial memory, then we run $s_2$ with the modified memory.
+\end{exampleblock}
+
+ 
+\pause 
+$$\frac{\ \langle s_1,S,H \rangle \rightarrow \langle S_1,H_1 \rangle\wedge\ \langle s_2,S_1,H_1 \rangle \rightarrow \langle S_2,H_2 \rangle}{\langle (s_1;s_2),S,H \rangle \rightarrow \langle S_2,H_2 \rangle}$$
+ 
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+What does ``\textit{first we run $s_1$ with the initial memory, then we run $s_2$ with the modified memory}'' imply?.
+\end{exampleblock}
+
+ 
+\pause 
+\begin{exampleblock}{}
+\begin{itemize}
+\item The same instructions, executed at different moments, will produce \textbf{different results}.
+\item Change the order of some method calls, and some weird dependence might cause bugs or break things.
+
+\end{itemize}
+
+\end{exampleblock}
+
+ 
+
+\end{frame}
+
+\SlideSubSection{Goals}
+\begin{frame}[fragile]{\CurrentSection}
+\begin{block}{\CurrentSubSection}
+\begin{itemize}
+\item Our goal is to ensure that behaviour of code is consistent.
+\item Change the order of some method calls, and the results remain the same.
+\item This makes it easier to test, parallelize, and in general ensure correctness.
+
+\end{itemize}
+
+\end{block}
+
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+\textit{How do we achieve this?}
+\end{exampleblock}
+
+ 
+\pause 
+\begin{exampleblock}{}
+We give (shared) memory up: every piece of code is a function which output only depends on input.
+\end{exampleblock}
+
+ 
+\begin{exampleblock}{}
+This very important property is called \textbf{referential transparency}.
+\end{exampleblock}
+
+ 
+
+\end{frame}
+
+\SlideSection{Basic lambda calculus}
+\SlideSubSection{Introduction}
+\begin{frame}[fragile]{\CurrentSection}
+\begin{block}{\CurrentSubSection}
+\begin{itemize}
+\item The (basic) lambda calculus is an alternative mechanism to Turing Machines and the Von Neumann architecture.
+\item It is very different, but has equivalent expressive power.
+\item It is the foundation of all functional programming languages.
+
+\end{itemize}
+
+\end{block}
+
+
+\end{frame}
+
+\SlideSubSection{Substitution principle}
+\begin{frame}[fragile]{\CurrentSection}
+\begin{block}{\CurrentSubSection}
+\begin{itemize}
+\item The (basic) lambda calculus is truly tiny when compared with its power.
+\item It is based on the substitution principle: calling a function with some parameters returns the function body with the variables replaced.
+\item There is no memory and no program counter: all we need to know is stored inside the body of the program itself.
+
+\end{itemize}
+
+\end{block}
+
+
+\end{frame}
+
+\SlideSubSection{Grammar}
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+A lambda calculus program (just \textit{program} from now on) is made up of three syntactic elements:
+\end{exampleblock}
+
+ 
+\begin{exampleblock}{}
+\begin{itemize}
+\item Variables: $x$, $y$, ...
+\item Abstractions (function declarations with one parameter): $\lambda x\rightarrow t$ where $x$ is a variable and $t$ is the function body (a program).
+\item Applications (function calls with one argument): $t\ u$ where $t$ is the function being called (a program) and $u$ is its argument (another program).
+
+\end{itemize}
+
+\end{exampleblock}
+
+ 
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+A simple example would be the identity function, which just returns whatever it gets as input
+\end{exampleblock}
+
+ 
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+($\lambda$x$\rightarrow$x)
+\end{lstlisting}
+ 
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+We can call this function with a variable as argument, by writing:
+\end{exampleblock}
+
+ 
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(($\lambda$x$\rightarrow$x) v)
+\end{lstlisting}
+ 
+
+\end{frame}
+
+\SlideSubSection{Beta reduction}
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+A lambda calculus program is computed by replacing lambda abstractions applied to arguments with the body of the lambda abstraction with the argument instead of the lambda parameter:
+\end{exampleblock}
+
+ 
+\pause 
+$$\frac{}{(\lambda x \rightarrow t)\ u  \rightarrow_\beta t [ x \mapsto u ]}$$
+ 
+\begin{exampleblock}{}
+$t [ x \mapsto u ]$ means that we change variable $x$ with $u$ within $t$
+\end{exampleblock}
+
+ 
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(($\lambda$x$\rightarrow$x) v)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+(*@\colorbox{orange}{(($\lambda$x$\rightarrow$x) v)}@*)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(*@\colorbox{orange}{(($\lambda$x$\rightarrow$x) v)}@*)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+(*@\colorbox{yellow}{v}@*)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+Multiple applications where the left-side is not a lambda abstraction are solved in a left-to-right fashion:
+\end{exampleblock}
+
+ 
+\pause 
+$$\frac{\ t \rightarrow_\beta t'\wedge\ u \rightarrow_\beta u'\wedge\ t'\ u' \rightarrow_\beta v}{t\ u \rightarrow_\beta v}$$
+ 
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+Variables cannot be further reduced, that is they stay the same:
+\end{exampleblock}
+
+ 
+\pause 
+$$\frac{}{x \rightarrow_\beta x}$$
+ 
+
+\end{frame}
+
+\SlideSubSection{Multiple parameters}
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+We can encode functions with multiple parameters by nesting lambda abstractions:
+\end{exampleblock}
+
+ 
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+($\lambda$x y$\rightarrow$(x y))
+\end{lstlisting}
+ 
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+The parameters are then given one at a time:
+\end{exampleblock}
+
+ 
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+((($\lambda$x y$\rightarrow$(x y)) A) B)
+\end{lstlisting}
+ 
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+((($\lambda$x y$\rightarrow$(x y)) A) B)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+((*@\colorbox{orange}{(($\lambda$x y$\rightarrow$(x y)) A)}@*) B)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+((*@\colorbox{orange}{(($\lambda$x y$\rightarrow$(x y)) A)}@*) B)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+(($\lambda$y$\rightarrow$((*@\colorbox{yellow}{A}@*) y)) B)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(($\lambda$y$\rightarrow$(A y)) B)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+(*@\colorbox{orange}{(($\lambda$y$\rightarrow$(A y)) B)}@*)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(*@\colorbox{orange}{(($\lambda$y$\rightarrow$(A y)) B)}@*)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+(A (*@\colorbox{yellow}{B}@*))
+\end{lstlisting}
+
+\end{frame}
+
+\SlideSection{Closing up}
+\SlideSubSection{Example executions of (apparently) nonsensical programs}
+\begin{frame}[fragile]{\CurrentSection}
+\begin{block}{\CurrentSubSection}
+\begin{itemize}
+\item We will now exercise with the execution of various lambda programs.
+\item Try to guess what the result of these programs is, and then we shall see what would have happened.
+
+\end{itemize}
+
+\end{block}
+
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+\textit{What is the result of this program execution?}
+\end{exampleblock}
+
+ 
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+((($\lambda$x y$\rightarrow$(x y)) ($\lambda$z$\rightarrow$(z z))) A)
+\end{lstlisting}
+ 
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+((($\lambda$x y$\rightarrow$(x y)) ($\lambda$z$\rightarrow$(z z))) A)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+((*@\colorbox{orange}{(($\lambda$x y$\rightarrow$(x y)) ($\lambda$z$\rightarrow$(z z)))}@*) A)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+((*@\colorbox{orange}{(($\lambda$x y$\rightarrow$(x y)) ($\lambda$z$\rightarrow$(z z)))}@*) A)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+(($\lambda$y$\rightarrow$((*@\colorbox{yellow}{($\lambda$z$\rightarrow$(z z))}@*) y)) A)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(($\lambda$y$\rightarrow$(($\lambda$z$\rightarrow$(z z)) y)) A)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+(*@\colorbox{orange}{(($\lambda$y$\rightarrow$(($\lambda$z$\rightarrow$(z z)) y)) A)}@*)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(*@\colorbox{orange}{(($\lambda$y$\rightarrow$(($\lambda$z$\rightarrow$(z z)) y)) A)}@*)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+(($\lambda$z$\rightarrow$(z z)) (*@\colorbox{yellow}{A}@*))
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(($\lambda$z$\rightarrow$(z z)) A)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+(*@\colorbox{orange}{(($\lambda$z$\rightarrow$(z z)) A)}@*)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(*@\colorbox{orange}{(($\lambda$z$\rightarrow$(z z)) A)}@*)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+((*@\colorbox{yellow}{A}@*) (*@\colorbox{yellow}{A}@*))
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+\textit{What is the result of this program execution? Watch out for the scope of the two ``x'' variables!}
+\end{exampleblock}
+
+ 
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+((($\lambda$x x$\rightarrow$(x x)) A) B)
+\end{lstlisting}
+ 
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+((($\lambda$x x$\rightarrow$(x x)) A) B)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+((*@\colorbox{orange}{(($\lambda$x x$\rightarrow$(x x)) A)}@*) B)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+((*@\colorbox{orange}{(($\lambda$x x$\rightarrow$(x x)) A)}@*) B)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+(($\lambda$x$\rightarrow$(x x)) B)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(($\lambda$x$\rightarrow$(x x)) B)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+(*@\colorbox{orange}{(($\lambda$x$\rightarrow$(x x)) B)}@*)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(*@\colorbox{orange}{(($\lambda$x$\rightarrow$(x x)) B)}@*)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+((*@\colorbox{yellow}{B}@*) (*@\colorbox{yellow}{B}@*))
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+The first ``x'' gets replaced with ``A'', but the second ``x'' shadows it!
+\end{exampleblock}
+
+ 
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+((($\lambda$x x$\rightarrow$(x x)) A) B)
+\end{lstlisting}
+ 
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+A better formulation, less ambiguous, would turn:
+\end{exampleblock}
+
+ 
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+((($\lambda$x x$\rightarrow$(x x)) A) B)
+\end{lstlisting}
+ 
+\begin{exampleblock}{}
+...into:
+\end{exampleblock}
+
+ 
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+((($\lambda$y x$\rightarrow$(x x)) A) B)
+\end{lstlisting}
+ 
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+((($\lambda$y x$\rightarrow$(x x)) A) B)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+((*@\colorbox{orange}{(($\lambda$y x$\rightarrow$(x x)) A)}@*) B)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+((*@\colorbox{orange}{(($\lambda$y x$\rightarrow$(x x)) A)}@*) B)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+(($\lambda$x$\rightarrow$(x x)) B)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(($\lambda$x$\rightarrow$(x x)) B)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+(*@\colorbox{orange}{(($\lambda$x$\rightarrow$(x x)) B)}@*)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(*@\colorbox{orange}{(($\lambda$x$\rightarrow$(x x)) B)}@*)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+((*@\colorbox{yellow}{B}@*) (*@\colorbox{yellow}{B}@*))
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+\textit{What is the result of this program execution? Is there even a result?}
+\end{exampleblock}
+
+ 
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(($\lambda$x$\rightarrow$(x x)) ($\lambda$x$\rightarrow$(x x)))
+\end{lstlisting}
+ 
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(($\lambda$x$\rightarrow$(x x)) ($\lambda$x$\rightarrow$(x x)))
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+(*@\colorbox{orange}{(($\lambda$x$\rightarrow$(x x)) ($\lambda$x$\rightarrow$(x x)))}@*)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(*@\colorbox{orange}{(($\lambda$x$\rightarrow$(x x)) ($\lambda$x$\rightarrow$(x x)))}@*)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+((*@\colorbox{yellow}{($\lambda$x$\rightarrow$(x x))}@*) (*@\colorbox{yellow}{($\lambda$x$\rightarrow$(x x))}@*))
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(($\lambda$x$\rightarrow$(x x)) ($\lambda$x$\rightarrow$(x x)))
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+(*@\colorbox{orange}{(($\lambda$x$\rightarrow$(x x)) ($\lambda$x$\rightarrow$(x x)))}@*)
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(*@\colorbox{orange}{(($\lambda$x$\rightarrow$(x x)) ($\lambda$x$\rightarrow$(x x)))}@*)
+\end{lstlisting}
+\pause\lstset{language=ML}\begin{lstlisting}
+((*@\colorbox{yellow}{($\lambda$x$\rightarrow$(x x))}@*) (*@\colorbox{yellow}{($\lambda$x$\rightarrow$(x x))}@*))
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{\CurrentSection}
+\lstset{basicstyle=\ttfamily\small}\lstset{numbers=none}\lstset{language=ML}\begin{lstlisting}
+(($\lambda$x$\rightarrow$(x x)) ($\lambda$x$\rightarrow$(x x)))
+\end{lstlisting}
+ 
+\begin{exampleblock}{}
+It never ends! Like a \texttt{while true: ..}!
+\end{exampleblock}
+
+ 
+
+\end{frame}
+
+\SlideSubSection{Crazy teachers tormenting poor students, or ``where are my integers?''}
+\begin{frame}[fragile]{\CurrentSection}
+\begin{exampleblock}{}
+Ok, I know what you are all thinking: what is this for sick joke? This is no real programming language!
+\end{exampleblock}
+
+ 
+\begin{exampleblock}{}
+\begin{itemize}
+\item We have some sort of functions and function calls
+\item We do not have booleans and \textttt{if}'s
+\item We do not have integers and arithmetic operators
+\item We do not have a lot of things!
+
+\end{itemize}
+
+\end{exampleblock}
+
+ 
+
+\end{frame}
+
+\SlideSubSection{Surprise!}
+\begin{frame}[fragile]{\CurrentSection}
+\begin{block}{\CurrentSubSection}
+With nothing but lambda programs we will show how to build all of these features and more.
+\end{block}
+
+
+\end{frame}
+
+\SlideSubSection{Stay tuned.}
+\begin{frame}[fragile]{\CurrentSection}
+\begin{block}{\CurrentSubSection}
+This will be a marvelous voyage.
+\end{block}
+
+
+\end{frame}
+
+
+\begin{frame}{This is it!}
+\center
+\fontsize{18pt}{7.2}\selectfont
+The best of luck, and thanks for the attention!
+\end{frame}
+
+\end{document}

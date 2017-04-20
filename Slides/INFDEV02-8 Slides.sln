@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "INFSEN01-1", "INFSEN01-1.fsproj", "{AC821330-CAFB-4E9A-92BC-ED6E89C508DA}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "INFDEV02-8", "INFDEV02-8.fsproj", "{AC821330-CAFB-4E9A-92BC-ED6E89C508DA}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "LatexSlidesGenerator", "..\..\LatexSlideGenerator\Slides\LatexSlidesGenerator.fsproj", "{86CACB78-7AE5-4626-8AEA-917CEF11C02A}"
 EndProject

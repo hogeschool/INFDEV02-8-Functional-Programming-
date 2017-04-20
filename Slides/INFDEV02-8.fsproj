@@ -8,11 +8,12 @@
     <ProjectGuid>ac821330-cafb-4e9a-92bc-ed6e89c508da</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Dev3</RootNamespace>
-    <AssemblyName>Dev3</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <AssemblyName>Slides for functional programming</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
-    <Name>INFSEN01-1</Name>
+    <TargetFSharpCoreVersion>4.4.1.0</TargetFSharpCoreVersion>
+    <Name>INFDEV02-8</Name>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -54,14 +55,12 @@
     <Compile Include="FunctionalWeek5.fs" />
     <Compile Include="FunctionalWeek6.fs" />
     <Compile Include="FunctionalWeek7.fs" />
-    <Compile Include="AssemblyInfo.fs" />
     <Compile Include="SampleExam1.fs" />
     <Compile Include="SampleExam2.fs" />
     <Compile Include="SampleExam3.fs" />
     <Compile Include="SampleExam4.fs" />
     <Compile Include="SampleExam5.fs" />
     <Compile Include="Program.fs" />
-    <None Include="App.config" />
     <None Include="INFSEN02-1-Lec1-Lambda-calculus.pdf" />
     <None Include="INFSEN02-1-Lec2-Delta-rules.pdf" />
     <None Include="INFSEN02-1-Lec4-Letrec-FSharp.pdf" />

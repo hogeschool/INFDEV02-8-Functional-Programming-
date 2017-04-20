@@ -11,128 +11,184 @@ let LambdaCodeBlock(x,y) = LambdaCodeBlock(x,y,false)
 let slides =
   [
     Section("Introduction")
+    SubSection("Course introduction")
+    ItemsBlock
+      [
+        !"Course topic: what is this course about?"
+        !"Examination: how will you be tested?"
+        !"Start with course"
+      ]
+
+    SubSection("Course topic: functional programming")
+    ItemsBlock
+      [
+        !"Lambda calculus"
+        !"From lambda calculus to functional programming"
+        !"Functional programming using \Fsharp and Haskell"
+      ]
+
+    SubSection("Advantages of functional programming")
+    ItemsBlock
+      [
+        !"Strong mathematical foundations"
+        !"Easier to reason about programs"
+        !"Parallelism for ``free''"
+        !"Correctness guarantees through strong typing (optional)"
+      ]    
+
+    SubSection("Examination")
+    ItemsBlock
+      [
+        !"Theory exam: test understanding of theory"
+        !"Practical exam: test ability to apply theory in practice"
+      ]
+
+    SubSection("Theory exam: reduction and typing")
+    ItemsBlock
+      [
+        !"One question on reduction in lambda calculus"
+        ! @"One question on typing in lambda calculus, \Fsharp, or Haskell"
+        ! @"\textbf{Passing grade} if both questions answered correctly"
+      ]
+
+    SubSection("Practical exam: interpreter for a virtual machine")
+    ItemsBlock
+      [
+        !"In a group, build an interpreter for a virtual machine"
+        !"According to a specification that will be provided"
+        !"Groups may consist of up to 4 students"
+        !"Understanding of code tested \\textbf{individually}"
+      ]
+      
     SubSection("Lecture topics")
     ItemsBlock
       [
-        !"Course introduction"
-        !"Exam and practicum"
-        !"Semantics of traditional programming languages"
-        !"Basic lambda calculus"
+        ! "Semantics(meaning) of imperative languages"
+        ! "Lambda calculus, the foundation for functional languages"
       ]
 
-    Section("Course introduction")
-    SubSection("Course topics")
-    ItemsBlock
+    Section("Semantics of imperative languages")
+    SubSection("Imperative program: sequence of statements")
+    ItemsBlock //WithTitle "Imperative program: sequence of statements"
       [
-        !"We will discuss a completely new paradigm for expressing programs"
-        !"This paradigm, functional programming, is based on different premises on computation"
-        !"It gives guarantees of correctness in complex places, like parallelism or separation of concerns"
-        !"It requires a radical conceptual shift in the way you think about programming"
+        !"Statements directly depend on and alter memory"
+        !"Meaning of statements may depend on contents of memory"
+        !"Any statement may depend on (read) any memory location"
+        !"Any statement may alter any memory location"
       ]
 
-    ItemsBlock
+    VerticalStack
       [
-        ! @"We will begin with a short discussion on traditional programming language \textbf{semantics}"
-        ! @"We will then show the \textbf{lambda calculus}, which is the foundation for functional languages"
-        VerticalStack
+        ItemsBlockWithTitle "Example: meaning of statement sequence"
           [
-          !"We will then bridge the gap between theory and practice"
-          ItemsBlock
-            [
-              !"We will translate the lambda calculus into two mainstream functional languages: F\# and Haskell"
-              !"This will cover a huge chunk of possible applications in countless other languages and libraries, from C\# LINQ to Java streams, to Scala, Scheme, Closure, etc."
-            ]
+            !"Statement $s_1$ changes the machine state from $S_0$ to $S_1$"
+            !"Statement $s_2$ changes the machine state from $S_1$ to $S_2$"
+           // !"$(S_0 \stackrel{s_1}{\longmapsto} S_1) \wedge (S_1 \stackrel{s_2}{\longmapsto} S_2) \implies S_0 \stackrel{s_1 s_2}{\longmapsto} S_2$"
+            !"Run statement $s_1$, then run statement $s_2$: $s_1 s_2$"
+            !"Statement $s_1 s_2$ changes the machine state from $S_0$ to $S_2$"
+            
           ]
-      ]
-
-    Section("Examination")
-    SubSection("Exam structure")
-    ItemsBlock
-      [
-        !"There is a theoretical exam, where you show understanding of the basic principles"
-        !"There is a practical exam, where you show understanding of their concrete applications"
-      ]
-
-    SubSection("Theoretical exam")
-    ItemsBlock
-      [
-        !"One question on a lambda calculus program execution"
-        !"One question on the type system of a lambda calculus program, F\# program, or Haskell program"
-        ! @"Both questions must be answered correctly to get a \textbf{voldoende}"
-      ]
-
-    SubSection("Practical exam")
-    VerticalStack
-      [
-        Small
-        TextBlock "Build, in groups of max four, an interpreter for a virtual machine according to the specifications given in the document that will be published during the course."
-
-        TextBlock @"We will get together at the end of the course, and the teacher(s) will ask you to \textbf{individually} perform some activities on the code to prove understanding and familiarity."
-      ]
-
-    Section "Semantics of traditional programming languages"
-    SubSection "Semicolon and interference"
-    VerticalStack
-      [
-        ItemsBlock
-          [
-            !"Traditional, imperative programming languages are based on sharing memory through instructions"
-            !"This means that subsequent instructions are not independent from each other"
-            !"Any function call makes use of the available memory"
-          ]
-      ]
-
-    VerticalStack
-      [
-        TextBlock "For example, consider the semantic rules that describe the working of ``;''"
-
-        TextBlock "First we run $s_1$ with the initial memory, then we run $s_2$ with the modified memory."
-
-        Pause
-
-        TypingRules
+        !"\centering$(S_0 \stackrel{s_1}{\longmapsto} S_1) \wedge (S_1 \stackrel{s_2}{\longmapsto} S_2) \implies S_0 \stackrel{s_1 s_2}{\longmapsto} S_2$"
+ (*       TypingRules
           [
             {
-              Premises = [ @"\langle s_1,S,H \rangle \rightarrow \langle S_1,H_1 \rangle"; @"\langle s_2,S_1,H_1 \rangle \rightarrow \langle S_2,H_2 \rangle" ]
-              Conclusion = @"\langle (s_1;s_2),S,H \rangle \rightarrow \langle S_2,H_2 \rangle"
+              Premises = [ @"S_0 \stackrel{s_1}{\longmapsto} S_1\quad S_1 \stackrel{s_2}{\longmapsto} S_2" ]
+              Conclusion = @"S_0 \stackrel{s_1 s_2}{\longmapsto} S_2"
             }
-          ]
+          ]*)
+        Pause
+        Question "What about $s_2 s_1$?"
+
       ]
 
     VerticalStack
       [
-        TextBlock @"What does ``\textit{first we run $s_1$ with the initial memory, then we run $s_2$ with the modified memory}'' imply?."
-        Pause
-        ItemsBlock 
+        ItemsBlockWithTitle "Swap order of $s_1 s_2$: $s_2 s_1$"
           [
-            ! @"The same instructions, executed at different moments, will produce \textbf{different results}."
-            ! @"Change the order of some method calls, and some weird dependence might cause bugs or break things."
+            !"Sometimes $s_2 s_1$ has the same meaning as $s_1 s_2$\ldots"
+            !"Sometimes $s_2 s_1$ is completely different from $s_1 s_2$!"
+            !"It depends on $s_1$, $s_2$, and the relevant machine state $S_0$"
+            !"It depends on implementation details of $s_1$ and $s_2$"
+            !"Implementation details matter $\implies$ leaky abstraction!"
+            //!"Often it is impossible to determine because of the implicit dependence via the machine state"
           ]
-      ]
-
-    SubSection "Goals"
-    ItemsBlock 
-      [
-        ! @"Our goal is to ensure that behaviour of code is consistent."
-        ! @"Change the order of some method calls, and the results remain the same."
-        ! @"This makes it easier to test, parallelize, and in general ensure correctness."
-      ]
-
-    VerticalStack 
-      [
-        Question "How do we achieve this?"
         Pause
-        TextBlock @"We give (shared) memory up: every piece of code is a function which output only depends on input."
-        TextBlock @"This very important property is called \textbf{referential transparency}."
+        Question "Can we do better?"
       ]
 
-    Section "Basic lambda calculus"
-    SubSection "Introduction"
-    ItemsBlock 
+    VerticalStack
       [
-        ! @"The (basic) lambda calculus is an alternative mechanism to Turing Machines and the Von Neumann architecture."
-        ! @"It is very different, but has equivalent expressive power."
-        ! @"It is the foundation of all functional programming languages."
+        ItemsBlockWithTitle "Idea for better abstraction: remove implicit dependencies"
+          [
+            ! @"No implicit dependencies $\implies$ all dependencies explicit"
+            !"No access to arbitrary machine state"
+            !"Only explicitly-mentioned state may be accessed"
+          ]
+        Pause
+        Question "What if $s_1$ and $s_2$ only read the same state?"
+      ]
+
+    VerticalStack
+      [
+        ItemsBlockWithTitle "What if $s_1{\{x\}}$ and $s_2{\{x\}}$ only read the same state $x$?"
+          [
+            ! @"$s_1{\{x\}}$ calculates $x+x$, and $s_2{\{x\}}$ calculates the square $x^2$"
+          ]
+        Question "Can we reorder $s_1{\{x\}}$ and $s_2{\{x\}}$?"
+        Pause
+        ItemsBlockWithTitle "What if $s_1{\{x\}}$ and $s_2{\{x\}}$ alter the same state $x$?"
+          [
+            ! @"$s_1{\{x\}}$ sets $x$ to 1, and $s_2{\{x\}}$ sets $x$ to 2"
+          ]
+        Question "Can we reorder $s_1{\{x\}}$ and $s_2{\{x\}}$?"
+        Pause
+        Question "Can we do better?"
+      ]
+
+    VerticalStack
+      [
+        ItemsBlockWithTitle "Idea for better abstraction: remove implicit dependencies"
+          [
+            ! @"No implicit dependencies $\implies$ all dependencies explicit"
+            !"No reading if arbitrary machine state"
+            !"No mutating of arbitrary machine state"
+            !"Only explicitly-mentioned machine state may be read"
+          ]
+        Pause
+        Block !"NB: No provision at all is made for mutating machine state"
+        ]
+
+    VerticalStack
+      [
+        ItemsBlockWithTitle "Wait a minute, this is just like functions"
+          [
+            !"Not statements, but (mathematical) functions"
+            !"Functions depend only on arguments"
+            !"Functions do not alter state"
+            !"Can calculate function value when all arguments are known"
+            !"Can always replace a function call by its value"
+          ]
+       ]
+
+    VerticalStack
+      [
+        BlockWithTitle(@"\textbf{Referential transparency:}", !"It is always valid to replace a function call by its value")
+        Pause
+        BlockWithTitle("Advanced topic:", !"Allow mutation of state without losing referential transparency")
+      ]
+
+    Section "Lambda calculus"
+    SubSection "Introduction to Lambda Calculus"
+    VerticalStack
+      [
+        ItemsBlockWithTitle "What is lambda calculus?"
+          [
+            !"Model of computation based on functions"
+            !"Completely different from Turing machines, but equivalent"
+            !"Foundation of all functional programming languages"
+            !"Truly tiny when compared with its power"
+            !"Consists of only (function) abstraction and application"
+          ]
       ]
 
     SubSection "Substitution principle"
@@ -146,11 +202,25 @@ let slides =
     SubSection "Grammar"
     VerticalStack
       [
-        TextBlock @"A lambda calculus program (just \textit{program} from now on) is made up of three syntactic elements:"
-
-        ItemsBlock 
+        ItemsBlockWithTitle "A lambda calculus term is one of three things:"
           [
-            ! @"Variables: $x$, $y$, ..."
+            !"a variable (from some arbitrary infinite set of variables)"
+            !"an abstraction (a ``function of one variable'')"
+            !"an application (a ``function call'')"
+          ]
+      ]
+
+    VerticalStack
+      [
+        BlockWithTitle("Variables (arbitrary infinite set):",! @"$a, b, c, \ldots\hfil a_0, a_1, \ldots\hfil b_0, b_1, \ldots$")
+        BlockWithTitle("Abstractions:",! @"For any variable $x$ and lambda term $T$: $\lambda x.T$")
+        BlockWithTitle("Applications:",! @"For any lambda terms $F$ and $T$: $(FT)$")
+      ]
+    VerticalStack
+      [
+        ItemsBlock
+          [
+            ! @"Infinite set of variables: $x_0, x_1, \ldots, y_0, y_1, \ldots$, etc."
             ! @"Abstractions (function declarations with one parameter): $\lambda x\rightarrow t$ where $x$ is a variable and $t$ is the function body (a program)."
             ! @"Applications (function calls with one argument): $t\ u$ where $t$ is the function being called (a program) and $u$ is its argument (another program)."
           ]
@@ -199,8 +269,8 @@ let slides =
         TypingRules
           [
             {
-              Premises = [ @"t \rightarrow_\beta t'"; @"u \rightarrow_\beta u'"; @"t'\ u' \rightarrow_\beta v"]
-              Conclusion = @"t\ u \rightarrow_\beta v"
+              Premises = [ @"t \rightarrow_\beta t'"; @"u \rightarrow_\beta u'"; @"(t'u') \rightarrow_\beta v"]
+              Conclusion = @"(t u) \rightarrow_\beta v"
             }
           ]
       ]
