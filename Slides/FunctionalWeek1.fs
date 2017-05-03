@@ -24,7 +24,7 @@ let slides =
       [
         !"Lambda calculus"
         !"From lambda calculus to functional programming"
-        !"Functional programming using \Fsharp and Haskell"
+        !"Functional programming using \Fsharp\ and Haskell"
       ]
 
     SubSection("Advantages of functional programming")
@@ -125,7 +125,7 @@ let slides =
             !"Only explicitly-mentioned state may be accessed"
           ]
         Pause
-        Question "What if $s_1$ and $s_2$ only read the same state?"
+        Question "What if $s_1$ and $s_2$ access the same state?"
       ]
 
     VerticalStack
@@ -150,7 +150,7 @@ let slides =
         ItemsBlockWithTitle "Idea for better abstraction: remove implicit dependencies"
           [
             ! @"No implicit dependencies $\implies$ all dependencies explicit"
-            !"No reading if arbitrary machine state"
+            !"No reading of arbitrary machine state"
             !"No mutating of arbitrary machine state"
             !"Only explicitly-mentioned machine state may be read"
           ]
@@ -164,15 +164,18 @@ let slides =
           [
             !"Not statements, but (mathematical) functions"
             !"Functions depend only on arguments"
-            !"Functions do not alter state"
+            !"Functions do not mutate machine state"
             !"Can calculate function value when all arguments are known"
             !"Can always replace a function call by its value"
           ]
+        Pause
+        BlockWithTitle("NB: Imperative ``functions'' need not be functions!", !"Non-function ``functions'' are more properly called procedures")
        ]
 
     VerticalStack
       [
         BlockWithTitle(@"\textbf{Referential transparency:}", !"It is always valid to replace a function call by its value")
+        
         Pause
         BlockWithTitle("Advanced topic:", !"Allow mutation of state without losing referential transparency")
       ]
@@ -191,14 +194,6 @@ let slides =
           ]
       ]
 
-    SubSection "Substitution principle"
-    ItemsBlock 
-      [
-        ! @"The (basic) lambda calculus is truly tiny when compared with its power."
-        ! @"It is based on the substitution principle: calling a function with some parameters returns the function body with the variables replaced."
-        ! @"There is no memory and no program counter: all we need to know is stored inside the body of the program itself."
-      ]    
-
     SubSection "Grammar"
     VerticalStack
       [
@@ -213,29 +208,20 @@ let slides =
     VerticalStack
       [
         BlockWithTitle("Variables (arbitrary infinite set):",! @"$a, b, c, \ldots\hfil a_0, a_1, \ldots\hfil b_0, b_1, \ldots$")
-        BlockWithTitle("Abstractions:",! @"For any variable $x$ and lambda term $T$: $\lambda x.T$")
+        BlockWithTitle("Abstractions:",! @"For any variable $x$ and lambda term $T$: $(\lambda x.T)$")
         BlockWithTitle("Applications:",! @"For any lambda terms $F$ and $T$: $(FT)$")
-      ]
-    VerticalStack
-      [
-        ItemsBlock
-          [
-            ! @"Infinite set of variables: $x_0, x_1, \ldots, y_0, y_1, \ldots$, etc."
-            ! @"Abstractions (function declarations with one parameter): $\lambda x\rightarrow t$ where $x$ is a variable and $t$ is the function body (a program)."
-            ! @"Applications (function calls with one argument): $t\ u$ where $t$ is the function being called (a program) and $u$ is its argument (another program)."
-          ]
       ]
 
     VerticalStack
       [
-        TextBlock "A simple example would be the identity function, which just returns whatever it gets as input"
+        TextBlock "A simple example: the identity function (just returns its input)"
 
         LambdaCodeBlock(TextSize.Small, -"x" ==> !!"x")
       ]
 
     VerticalStack
       [
-        TextBlock "We can call this function with a variable as argument, by writing:"
+        TextBlock "A simple example: call the identity function on a variable"
 
         LambdaCodeBlock(TextSize.Small, (-"x" ==> !!"x") >> !!"v")
       ]
@@ -243,63 +229,23 @@ let slides =
     SubSection "Beta reduction"
     VerticalStack
       [
-        TextBlock @"A lambda calculus program is computed by replacing lambda abstractions applied to arguments with the body of the lambda abstraction with the argument instead of the lambda parameter:"
-
-        Pause
-
-        TypingRules
+        ItemsBlockWithTitle @"$\beta$-reduction"
           [
-            {
-              Premises = []
-              Conclusion = @"(\lambda x \rightarrow t)\ u  \rightarrow_\beta t [ x \mapsto u ]"
-            }
-          ]
-
-        TextBlock @"$t [ x \mapsto u ]$ means that we change variable $x$ with $u$ within $t$"
+            !"Redex: application of an abstraction to an argument"
+            !"Result: in abstraction body replace parameter by argument"
+           ]
+        ! @"\centering$((\lambda x.B)A) \rightarrow_\beta B [ x \mapsto A ]$"
       ]
 
-    LambdaStateTrace(TextSize.Small, (-"x" ==> !!"x") >> !!"v", Option.None)
-
-    VerticalStack
-      [
-        TextBlock @"Multiple applications where the left-side is not a lambda abstraction are solved in a left-to-right fashion:"
-
-        Pause
-
-        TypingRules
-          [
-            {
-              Premises = [ @"t \rightarrow_\beta t'"; @"u \rightarrow_\beta u'"; @"(t'u') \rightarrow_\beta v"]
-              Conclusion = @"(t u) \rightarrow_\beta v"
-            }
-          ]
-      ]
-
-    VerticalStack
-      [
-        TextBlock @"Variables cannot be further reduced, that is they stay the same:"
-
-        Pause
-
-        TypingRules
-          [
-            {
-              Premises = []
-              Conclusion = @"x \rightarrow_\beta x"
-            }
-          ]
-      ]
+//    LambdaStateTrace(TextSize.Small, (-"x" ==> !!"x") >> !!"v", Option.None)
 
     SubSection "Multiple parameters"
     VerticalStack
       [
-        TextBlock "We can encode functions with multiple parameters by nesting lambda abstractions:"
+        BlockWithTitle("Multiple parameters via nested abstractions:",! @"(\lambda x.(\lambda y.(x y)))")
 
-        LambdaCodeBlock(TextSize.Small, -"x" ==> (-"y" ==> (!!"x" >> !!"y")))
-      ]
+//        LambdaCodeBlock(TextSize.Small, -"x" ==> (-"y" ==> (!!"x" >> !!"y")))
 
-    VerticalStack
-      [
         TextBlock "The parameters are then given one at a time:"
 
         LambdaCodeBlock(TextSize.Small, ((-"x" ==> (-"y" ==> (!!"x" >> !!"y"))) >> !!"A") >> !!"B")
@@ -311,13 +257,13 @@ let slides =
     SubSection "Example executions of (apparently) nonsensical programs"
     ItemsBlock
       [
-        ! @"We will now exercise with the execution of various lambda programs."
-        ! @"Try to guess what the result of these programs is, and then we shall see what would have happened."
+        ! @"Manual execution of various lambda programs."
+        ! @"Try to work out the result of these programs."
       ]
 
     VerticalStack
       [
-        Question "What is the result of this program execution?"
+        Question "What is the result of this program?"
 
         LambdaCodeBlock(TextSize.Small, ((-"x" ==> (-"y" ==> (!!"x" >> !!"y")) >> (-"z" ==> (!!"z" >> !!"z"))) >> !!"A"))
       ]
@@ -326,7 +272,7 @@ let slides =
 
     VerticalStack
       [
-        Question "What is the result of this program execution? Watch out for the scope of the two ``x'' variables!"
+        Question "What is this program's result? Hint: scope!"
 
         LambdaCodeBlock(TextSize.Small, (-"x" ==> (-"x" ==> (!!"x" >> !!"x")) >> !!"A") >> !!"B")
       ]
@@ -335,18 +281,18 @@ let slides =
 
     VerticalStack
       [
-        TextBlock "The first ``x'' gets replaced with ``A'', but the second ``x'' shadows it!"
+        TextBlock "Outer $x$ is shadowed by inner $x$!"
 
         LambdaCodeBlock(TextSize.Small, (-"x" ==> (-"x" ==> (!!"x" >> !!"x")) >> !!"A") >> !!"B")
       ]
 
     VerticalStack
       [
-        TextBlock "A better formulation, less ambiguous, would turn:"
+        TextBlock "To disambiguate, turn:"
 
         LambdaCodeBlock(TextSize.Small, (-"x" ==> (-"x" ==> (!!"x" >> !!"x")) >> !!"A") >> !!"B")
 
-        TextBlock "...into:"
+        TextBlock "into:"
 
         LambdaCodeBlock(TextSize.Small, (-"y" ==> (-"x" ==> (!!"x" >> !!"x")) >> !!"A") >> !!"B")
       ]
@@ -356,7 +302,7 @@ let slides =
 
     VerticalStack
       [
-        Question "What is the result of this program execution? Is there even a result?"
+        Question "What is this program's result? Is there even one?"
 
         LambdaCodeBlock(TextSize.Small, (-"x" ==> (!!"x" >> !!"x")) >> (-"x" ==> (!!"x" >> !!"x")))
       ]
@@ -373,21 +319,20 @@ let slides =
     SubSection "Crazy teachers tormenting poor students, or ``where are my integers?''"
     VerticalStack
       [
-        TextBlock "Ok, I know what you are all thinking: what is this for sick joke? This is no real programming language!"
+        BlockWithTitle("What you are all thinking:",!"This is no real programming language!")
 
-        ItemsBlock
+        ItemsBlockWithTitle("Is this a joke?")
           [
             ! "We have some sort of functions and function calls"
             ! @"We do not have booleans and \textttt{if}'s"
             ! @"We do not have integers and arithmetic operators"
             ! @"We do not have a lot of things!"
           ]
+
+        Pause
+        BlockWithTitle("Surprise!",! "All these things are in there awaiting discovery!")
+        Pause
+        BlockWithTitle("Stay tuned",! "This will be a marvelous voyage!")
       ]
-
-    SubSection "Surprise!"
-    TextBlock "With nothing but lambda programs we will show how to build all of these features and more."
-
-    SubSection "Stay tuned."
-    TextBlock "This will be a marvelous voyage."
   ]
 
