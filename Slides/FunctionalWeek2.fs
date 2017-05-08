@@ -23,23 +23,23 @@ let slides =
     SubSection("Introduction")
     ItemsBlock
       [
-        ! @"We can decide that some specific lambda terms have special meanings"
-        ! @"For example, we could decide that a given lambda term means \texttt{TRUE}, another \texttt{FALSE}, etc."
-        ! @"The important thing is that we choose terms that behave as we wish"
+        ! @"Give names to important lambda terms: \texttt{TRUE}, \texttt{FALSE}, \ldots"
+        ! @"Make sure we choose terms that behave the right way"
+        ! @"Define delta rules: map between names and lambda terms (and vice versa)"
       ]
 
-    SubSection("As we wish?")
+    SubSection("Behave the right way?")
     ItemsBlock
       [
-        ! @"Suppose we define some lambda terms for \texttt{TRUE}, \texttt{FALSE}, and \texttt{AND}"
-        ! @"We expect these terms to reduce\footnote{That is, computed according to $\rightarrow_\beta$} following our expectations of boolean logic"
+        ! @"Given lambda terms for \texttt{TRUE}, \texttt{FALSE}, and \texttt{AND}"
+        ! @"Must behave according to the rules of boolean logic"
         ! @"We can use truth tables to encode our expectations"
       ]
 
     SubSection("Specification with, for example, truth tables")
     VerticalStack
       [
-        TextBlock @"We want to formulate \texttt{TRUE}, \texttt{FALSE}, and \texttt{AND} so that"
+        TextBlock @"We want to find terms \texttt{TRUE}, \texttt{FALSE}, and \texttt{AND} so that"
         ItemsBlock
           [
             ! @"\texttt{TRUE} $\wedge$ \texttt{TRUE} $\rightarrow_\beta$ \texttt{TRUE}"
@@ -49,22 +49,7 @@ let slides =
           ]
       ]
 
-    Section("Defining terms with special meaning")
-    SubSection("Choice terms")
-    ItemsBlock
-      [
-        ! @"Terms with special meaning essentially make a choice when given parameters"
-        ! @"The choice is expressed by either returning, or applying, the parameters"
-      ]
-
-    SubSection("Delta rules")
-    ItemsBlock
-      [
-        ! @"We wish to use special symbols to these terms with special meaning"
-        ! @"We define a series of delta rules, which are transformation from pretty symbols into lambda terms (and vice-versa)"
-      ]
-
-    TextBlock @"This means that we will be able to write lambda programs such as \texttt{5+3}, that will then be translated into the appropriate lambda terms"
+    TextBlock @"Can write lambda programs like \texttt{5+3}"
 
     Section("Booleans")
     SubSection("Idea")
@@ -94,7 +79,7 @@ let slides =
         LambdaCodeBlock(TextSize.Small, (CodeDefinitionLambda.deltaRules Term.And).Value)
       ]
 
-    TextBlock(@"Let us begin to with \texttt{TRUE} $\wedge$ \texttt{TRUE} $\rightarrow_\beta$ \texttt{TRUE}")
+    TextBlock(@"Let us begin with \texttt{TRUE} $\wedge$ \texttt{TRUE} $\rightarrow_\beta$ \texttt{TRUE}")
     LambdaStateTrace(TextSize.Small, ((And >> True) >> True), None)
 
     VerticalStack
