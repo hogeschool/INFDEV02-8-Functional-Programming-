@@ -12,7 +12,7 @@ import qualified Text.Parsec.Token as Token
 -- import qualified Text.Megaparsec.Lexer as L
 
 -- Discriminated union for the 4 registers of the SVM
-data Register = Reg1 | Reg2 | Reg3 | Reg4 deriving (Show)
+data Register = Reg1 | Reg2 | Reg3 | Reg4 deriving (Show, Eq)
 
 -- Tuple used to store the line and column index of an instruction. It is used to write the position of a parse or runtime error
 -- when the relative exception is thrown
@@ -23,13 +23,13 @@ type Position = (Int, Int)
 data Literal = Integer Integer -- Position
              | Float Double -- Position
              | String String -- Position
-             deriving (Show)
+             deriving (Show, Eq)
                       
-data Address = Direct Integer | Indirect Register deriving (Show)
+data Address = Direct Integer | Indirect Register deriving (Show, Eq)
 
-data Location = Address Address | Register Register deriving (Show)
+data Location = Address Address | Register Register deriving (Show, Eq)
 
-data Value = Location Location | Literal Literal deriving (Show)
+data Value = Location Location | Literal Literal deriving (Show, Eq)
 
 -- Instructions supported by the SVM. See the documentation for further details.
 data Instruction = Nop -- Position
@@ -47,7 +47,7 @@ data Instruction = Nop -- Position
                  | Jc String Register -- Position
                  | Jeq String Register -- Position
                  | Label String -- Position
-                   deriving (Show)
+                   deriving (Show, Eq)
 
 -- The Parser generates a Program data structure which is simply a list of instructions.
 type Program = [Instruction]
