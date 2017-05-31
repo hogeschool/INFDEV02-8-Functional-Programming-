@@ -1,4 +1,4 @@
-module ParseSVM (program, parse, parseTest) where
+module ParseSVM (program, parse, parseTest, Literal(..), Address(..), Location(..), Value(..), Register(..), Instruction(..)) where
 import Control.Monad (void)
 
 import Text.Parsec
