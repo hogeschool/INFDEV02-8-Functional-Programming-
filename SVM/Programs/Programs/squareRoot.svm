@@ -1,4 +1,4 @@
-﻿/* Compute the square root of the number stored in [0] and saves
+/* Compute the square root of the number stored in [0] and saves
    the result in [1] */
 
 mov [0] 3.0

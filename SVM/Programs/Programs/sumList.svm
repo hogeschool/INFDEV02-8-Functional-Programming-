@@ -1,4 +1,4 @@
-﻿/* sum the elements of a list storing the result in [0] */
+/* sum the elements of a list storing the result in [0] */
 
 //set the length of the list and base address
 mov [10] 5

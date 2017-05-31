@@ -1,4 +1,4 @@
-﻿/* initialize a list of 10 elements set to -1 */
+/* initialize a list of 10 elements set to -1 */
 
 #loop
 mov reg1 reg2
