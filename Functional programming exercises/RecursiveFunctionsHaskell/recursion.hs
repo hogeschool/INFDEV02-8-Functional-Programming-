@@ -133,7 +133,7 @@ main = do
   
   -- exercise 7
   putStr("\nText correction with 'besides'\n")
-  print (textCorrection "we will show that functional programming languages are the best. besides we will prove that f# is the finest among all functional languages.")
+  print (textCorrection "we will show that functional programming languages are the best. besides we will prove that f# is the finest among all functional languages (some think).")
   print (textCorrection "yo dawg, i heard you like replacing words, so i put a besides in a besides so you can replace while you replace")
   
   -- exercise 8
